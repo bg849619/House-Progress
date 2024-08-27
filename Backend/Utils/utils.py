@@ -1,24 +1,24 @@
-import csv
+from Saves.what import data
 
-def read_save(path):
-    data_dict = {}
-    with open(path, 'r') as f:
-        reader = csv.DictReader(f)
+def read_save():
+    transformed_data = []
+    for date, records in data.items():
+        record = {"date": date}
+        record.update(sorted(records.items()))
+        transformed_data.append(record)
 
-        for row in reader:
-            name = row['Name']
+    return transformed_data
 
-            if name in data_dict:
-                data_dict[name].append({"Amount": float(row['Amount']),"Date":  row['Date']})
-            else:
-                data_dict[name] = [{"Amount": float(row['Amount']),"Date":  row['Date']}]
-
-    return data_dict
-
-def get_names(path):
+def get_names():
     names = set()
-    with open(path, 'r') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            names.add(row['Name'])
+
+    for records in data.values():
+        for name in records:
+            names.add(name)
     return list(names)
+
+def add_amount(name: str, amount: int, date: str):
+    if data[date]:
+        data[date].update({name:amount})
+    else:
+        data[date] = { name:amount}

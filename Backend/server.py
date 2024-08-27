@@ -1,5 +1,5 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse
 from Utils.utils import *
 
 import json
@@ -21,19 +21,18 @@ class testHttp(BaseHTTPRequestHandler):
     def get_names(self):
         # Code to get names
         self.send_response(200)
-        self.send_header("Content-type", "text/plain")
+        self.send_header("Content-type", "application/json")
         self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
-        self.wfile.write(json.dumps(get_names("Saves/data.csv")).encode())
+        self.wfile.write(json.dumps(get_names()).encode())
 
     def get_data(self):
         # Code to get data
         self.send_response(200)
-        self.send_header("Content-type", "text/plain")
+        self.send_header("Content-type", "application/json")
         self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
-        self.wfile.write(json.dumps(read_save("Saves/data.csv")).encode())
-
+        self.wfile.write(json.dumps(read_save()).encode())
 
 def run():
     print(f'Server running on port {PORT}')
