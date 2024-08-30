@@ -1,24 +1,39 @@
-from Saves.what import data
+import pickle
+import os
 
-def read_save():
-    transformed_data = []
-    for date, records in data.items():
-        record = {"date": date}
-        record.update(sorted(records.items()))
-        transformed_data.append(record)
+class DataHandler:
+    def __init__(self, filepath="Saves/data.pkl"):
+        self.filepath = filepath
+        self.data = self.load_data()
 
-    return transformed_data
+    def load_data(self):
+        if os.path.exists(self.filepath):
+            with open(self.filepath, "rb") as f:
+                return pickle.load(f)
+        else:
+            return {}
 
-def get_names():
-    names = set()
+    def save_data(self):
+        with open(self.filepath, "wb") as f:
+            pickle.dump(self.data, f, pickle.HIGHEST_PROTOCOL)
 
-    for records in data.values():
-        for name in records:
-            names.add(name)
-    return list(names)
+    def read_save(self):
+        transformed_data = []
+        for date, records in self.data.items():
+            record = {"date": date}
+            record.update(sorted(records.items()))
+            transformed_data.append(record)
+        return transformed_data
 
-def add_amount(name: str, amount: int, date: str):
-    if data[date]:
-        data[date].update({name:amount})
-    else:
-        data[date] = { name:amount}
+    def get_names(self):
+        names = set()
+        for records in self.data.values():
+            for name in records:
+                names.add(name)
+        return list(names)
+
+    def add_amount(self, name: str, amount: int, date: str):
+        if date in self.data:
+            self.data[date].update({name: amount})
+        else:
+            self.data[date] = {name: amount}
