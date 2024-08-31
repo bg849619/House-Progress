@@ -35,6 +35,30 @@ class testHttp(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(json.dumps(self.handler.read_save()).encode())
 
+    def do_POST(self):
+        path = urlparse(self.path).path
+
+        if path:
+            self.add_amount()
+
+    def add_amount(self):
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length)  
+        data = json.loads(post_data)
+
+        name = data.get('name')
+        date = data.get('date')
+        amount = data.get('amount')
+
+        if name and date and amount:
+            self.handler.add_amount(name, amount, date)
+
+            self.send_response(200)
+            self.send_header("Content-type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            self.wfile.write(json.dumps({"status": "success"}).encode())
+
 def run():
     print(f'Server running on port {PORT}')
     server = HTTPServer((HOST, PORT), testHttp)
@@ -42,7 +66,7 @@ def run():
         server.serve_forever()
     except KeyboardInterrupt:
         print('Interupted by user, saving data')
-        testHttp.handler.save_data()
+        # testHttp.handler.save_data()
         print('Closing server')
         server.server_close()
 
