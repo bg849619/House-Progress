@@ -7,6 +7,7 @@ import { EMPTY, switchMap, zip } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { AddDialogComponent, addDialogData } from '../dialog/add-dialog/add-dialog.component';
 import { MatButtonModule } from '@angular/material/button';
+import { EditDialogComponent } from '../dialog/edit-dialog/edit-dialog.component';
 
 @Component({
 	selector: 'app-chart',
@@ -63,7 +64,7 @@ export class ChartComponent implements OnInit {
 		).subscribe((res: [string[], JSON[]]) => {
 			if (JSON.stringify(this.names) != JSON.stringify(res[0])) {
 				this.names = res[0]
-				const newSeries: any = this.names.map((name:String) => ({
+				const newSeries: any = this.names.map((name: String) => ({
 					type: "line",
 					xKey: "date",
 					yKey: name,
@@ -87,6 +88,7 @@ export class ChartComponent implements OnInit {
 		const addData: addDialogData = {
 			names: this.names
 		}
+
 		this.matDialog.open(AddDialogComponent, {
 			data: addData
 		}).afterClosed().pipe(
@@ -102,6 +104,10 @@ export class ChartComponent implements OnInit {
 				this.updateChartData()
 			}
 		})
+	}
+
+	editDataButtonClick() {
+		this.matDialog.open( EditDialogComponent, {})
 	}
 
 
