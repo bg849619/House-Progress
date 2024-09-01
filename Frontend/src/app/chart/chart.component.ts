@@ -32,38 +32,7 @@ export class ChartComponent implements OnInit {
 			footnote: {
 				text: "Source: Your mom",
 			},
-			series: [
-				{
-					type: "line",
-					xKey: "date",
-					yKey: "Chance",
-					yName: "Chance",
-				},
-				{
-					type: "line",
-					xKey: "date",
-					yKey: "Cody",
-					yName: "Cody",
-				},
-				{
-					type: "line",
-					xKey: "date",
-					yKey: "Kaleb",
-					yName: "Kaleb",
-				},
-				{
-					type: "line",
-					xKey: "date",
-					yKey: "Nick",
-					yName: "Nick",
-				},
-				{
-					type: "line",
-					xKey: "date",
-					yKey: "Sam",
-					yName: "Sam",
-				}
-			],
+			series: [],
 			axes: [
 				{
 					type: "category",
@@ -84,20 +53,34 @@ export class ChartComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.updateChartData()
+	}
+
+	private updateChartData() {
 		zip(
 			this.chartService.get_names(),
 			this.chartService.get_data()
 		).subscribe((res: [string[], JSON[]]) => {
-			this.names = res[0],
-				this.updateChartData(res[1])
+			if (JSON.stringify(this.names) != JSON.stringify(res[0])) {
+				this.names = res[0]
+				const newSeries: any = this.names.map((name:String) => ({
+					type: "line",
+					xKey: "date",
+					yKey: name,
+					yName: name,
+				}))
+				this.chartOptions = {
+					...this.chartOptions,
+					series: newSeries,
+					data: res[1]
+				}
+			} else {
+				this.chartOptions = {
+					...this.chartOptions,
+					data: res[1]
+				};
+			}
 		})
-	}
-
-	private updateChartData(newData: JSON[]) {
-		return this.chartOptions = {
-			...this.chartOptions,
-			data: newData
-		};
 	}
 
 	addDataButtonClick() {
@@ -113,16 +96,11 @@ export class ChartComponent implements OnInit {
 				} else {
 					return EMPTY
 				}
-			}),
-			switchMap((res: any) => {
-				if (res.status === 'success') {
-					return this.chartService.get_data()
-				} else {
-					return EMPTY
-				}
-			}),
-		).subscribe((res: JSON[]) => {
-			this.updateChartData(res)
+			})
+		).subscribe((res: any) => {
+			if (res.status === 'success') {
+				this.updateChartData()
+			}
 		})
 	}
 
