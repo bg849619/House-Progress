@@ -1,21 +1,15 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
-} from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MAT_DIALOG_DATA, MatDialogClose, MatDialogRef } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon'
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatSelectModule} from '@angular/material/select';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { map, Observable, startWith } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 export interface addDialogData {
   names: string[];
@@ -25,18 +19,15 @@ export interface addDialogData {
   selector: 'app-add-dialog',
   standalone: true,
   imports: [
-    MatFormFieldModule,
     MatInputModule,
-    FormsModule,
     MatButtonModule,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
     MatDialogClose,
     MatIconModule,
     MatDatepickerModule,
     ReactiveFormsModule,
-    MatSelectModule
+    MatSelectModule,
+    MatAutocompleteModule,
+    AsyncPipe
   ],
   templateUrl: './add-dialog.component.html',
   styleUrl: './add-dialog.component.scss'
@@ -46,6 +37,7 @@ export class AddDialogComponent {
   readonly dialogRef = inject(MatDialogRef<AddDialogComponent>);
   readonly data = inject<addDialogData>(MAT_DIALOG_DATA);
   form: FormGroup
+  filteredNames: Observable<string[]>;
 
   constructor(){
     this.form = new FormGroup({
@@ -53,6 +45,18 @@ export class AddDialogComponent {
       name: new FormControl('', Validators.required),
       amount: new FormControl('', [Validators.required, Validators.pattern(/^\$?\d+\.\d{2}\$?$/gm)])
     })
+
+    this.filteredNames = this.form.controls['name'].valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value || ''))
+    );
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.data.names.filter(option =>
+      option.toLowerCase().includes(filterValue)
+    );
   }
 
   onSubmit(): void {

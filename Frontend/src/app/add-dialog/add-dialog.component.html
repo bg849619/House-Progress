@@ -12,12 +12,12 @@
         <div style="display: flex; align-items: center; margin-bottom: 16px;">
             <mat-form-field style="flex: 1; margin-right: 8px;">
                 <mat-icon matPrefix>person</mat-icon>
-                <!-- <mat-label> food</mat-label> -->
-                <mat-select formControlName="name">
-                    @for (name of data.names; track $index) {
+                <input type="text" matInput formControlName="name" [matAutocomplete]="auto">
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                    @for (name of filteredNames | async; track name) {
                     <mat-option [value]="name">{{name}}</mat-option>
                     }
-                </mat-select>
+                </mat-autocomplete>
             </mat-form-field>
             <mat-form-field style="flex: 1;">
                 <mat-icon matPrefix>money</mat-icon>

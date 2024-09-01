@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ChartService } from '../service/chart.service';
 import { AgCharts } from 'ag-charts-angular';
 import { AgChartOptions } from 'ag-charts-community';
-import { EMPTY, map, switchMap, tap, zip } from 'rxjs';
+import { EMPTY, switchMap, zip } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { AddDialogComponent, addDialogData } from '../add-dialog/add-dialog.component';
 import { MatButtonModule } from '@angular/material/button';
@@ -87,13 +87,13 @@ export class ChartComponent implements OnInit {
 		zip(
 			this.chartService.get_names(),
 			this.chartService.get_data()
-		).subscribe((res: [string[], any]) => {
+		).subscribe((res: [string[], JSON[]]) => {
 			this.names = res[0],
-			this.updateChartData(res[1])
+				this.updateChartData(res[1])
 		})
 	}
 
-	private updateChartData(newData: any[]) { 
+	private updateChartData(newData: JSON[]) {
 		return this.chartOptions = {
 			...this.chartOptions,
 			data: newData
@@ -108,22 +108,22 @@ export class ChartComponent implements OnInit {
 			data: addData
 		}).afterClosed().pipe(
 			switchMap((res) => {
-				if(res){
+				if (res) {
 					return this.chartService.add_data(res.name, res.date, res.amount)
-				}else{
+				} else {
 					return EMPTY
 				}
 			}),
 			switchMap((res: any) => {
-				if(res.status === 'success'){
+				if (res.status === 'success') {
 					return this.chartService.get_data()
-				}else{
+				} else {
 					return EMPTY
 				}
 			}),
-			).subscribe((res:any) => {
-				this.updateChartData(res)
-			})
+		).subscribe((res: JSON[]) => {
+			this.updateChartData(res)
+		})
 	}
 
 

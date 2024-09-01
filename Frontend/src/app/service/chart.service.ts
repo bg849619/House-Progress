@@ -11,8 +11,8 @@ export class ChartService {
 
   constructor(private http: HttpClient) { }
 
-  get_data(): Observable<JSON>{
-    return this.http.get<JSON>(`${this.url}/data`)
+  get_data(): Observable<JSON[]>{
+    return this.http.get<JSON[]>(`${this.url}/data`)
   }
 
   get_names(): Observable<string[]>{
@@ -25,7 +25,6 @@ export class ChartService {
       name: name,
       amount: amount
     }
-    console.log(body)
     return this.http.post<JSON>(`${this.url}`, body)
   }
 }
