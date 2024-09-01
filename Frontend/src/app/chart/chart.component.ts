@@ -5,7 +5,7 @@ import { AgCharts } from 'ag-charts-angular';
 import { AgChartOptions } from 'ag-charts-community';
 import { EMPTY, switchMap, zip } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { AddDialogComponent, addDialogData } from '../add-dialog/add-dialog.component';
+import { AddDialogComponent, addDialogData } from '../dialog/add-dialog/add-dialog.component';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
