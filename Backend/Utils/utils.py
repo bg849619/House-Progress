@@ -30,7 +30,7 @@ class DataHandler:
         for records in self.data.values():
             for name in records:
                 names.add(name)
-        return list(names)
+        return list(sorted(names))
 
     def add_amount(self, name: str, amount: int, date: str):
         if date in self.data:
