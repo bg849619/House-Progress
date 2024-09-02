@@ -27,4 +27,13 @@ export class ChartService {
     }
     return this.http.post<JSON>(`${this.url}`, body)
   }
+
+  edit_data(name: string, date: string, amount:number): Observable<JSON>{
+    const body = {
+      date: date,
+      name: name,
+      amount: amount
+    }
+    return this.http.put<JSON>(`${this.url}`, body)
+  }
 }
