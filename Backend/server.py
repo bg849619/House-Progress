@@ -6,7 +6,7 @@ from threading import Thread, Event
 
 import json
 
-HOST = 'localhost'
+HOST = '0.0.0.0'
 PORT = 9980
 
 
