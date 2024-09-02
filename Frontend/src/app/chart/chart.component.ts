@@ -7,7 +7,7 @@ import { EMPTY, switchMap, zip } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { AddDialogComponent, addDialogData } from '../dialog/add-dialog/add-dialog.component';
 import { MatButtonModule } from '@angular/material/button';
-import { EditDialogComponent } from '../dialog/edit-dialog/edit-dialog.component';
+import { EditDialogComponent, editDialogData } from '../dialog/edit-dialog/edit-dialog.component';
 
 @Component({
 	selector: 'app-chart',
@@ -107,7 +107,26 @@ export class ChartComponent implements OnInit {
 	}
 
 	editDataButtonClick() {
-		this.matDialog.open( EditDialogComponent, {})
+		const editData: editDialogData = {
+			gamblingData: this.chartOptions.data ?? [],
+			names: this.names
+		}
+
+		this.matDialog.open( EditDialogComponent, {
+			data: editData
+		}).afterClosed().pipe(
+			switchMap((res) => {
+				if (res) {
+					return this.chartService.edit_data(res.name, res.date, res.amount)
+				}else{
+					return EMPTY
+				}
+			})
+		).subscribe((res: any) => {
+			if (res.status === 'success') {
+				this.updateChartData()
+			}
+		})
 	}
 
 
