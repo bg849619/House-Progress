@@ -1,6 +1,7 @@
 import pickle
 import os
 
+
 class DataHandler:
     def __init__(self, filepath="Saves/data.pkl"):
         self.filepath = filepath
@@ -37,3 +38,11 @@ class DataHandler:
             self.data[date].update({name: amount})
         else:
             self.data[date] = {name: amount}
+
+    def edit_amount(self, name: str, amount: int, date: str):
+        if date in self.data and name in self.data[date]:
+            self.data[date][name] = amount
+            return 1
+        else:
+            return -1
+    

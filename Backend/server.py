@@ -7,6 +7,7 @@ import json
 HOST = 'localhost'
 PORT = 9980
 
+
 class testHttp(BaseHTTPRequestHandler):
 
     handler = DataHandler()
@@ -51,7 +52,7 @@ class testHttp(BaseHTTPRequestHandler):
 
     def add_amount(self):
         content_length = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(content_length)  
+        post_data = self.rfile.read(content_length)
         data = json.loads(post_data)
 
         name = data.get('name')
@@ -66,6 +67,35 @@ class testHttp(BaseHTTPRequestHandler):
             self.send_header("Access-Control-Allow-Origin", "*")
             self.end_headers()
             self.wfile.write(json.dumps({"status": "success"}).encode())
+
+    def do_PUT(self):
+        path = urlparse(self.path).path
+
+        if path:
+            self.edit_amount()
+
+    def edit_amount(self):
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length)
+        data = json.loads(post_data)
+
+        name = data.get('name')
+        date = data.get('date')
+        amount = data.get('amount')
+
+        if name and date and amount:
+            if self.handler.edit_amount(name, amount, date) == 1:
+                self.send_response(200)
+                self.send_header("Content-type", "application/json")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "success"}).encode())
+            else:
+                self.send_response(404)
+                self.send_header("Content-type", "application/json")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "failure"}).encode())
 
 def run():
     print(f'Server running on port {PORT}')
