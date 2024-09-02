@@ -1,1 +1,37 @@
-<p>edit-dialog works!</p>
+<!-- Header -->
+<div style="display: flex; align-items: center;">
+    <h1 mat-dialog-header style="margin: 0;">Edit Amount</h1>
+    <button mat-icon-button mat-dialog-close style="margin-left: auto;">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<!-- Content -->
+<div style="padding: 8px;">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <!-- Name and Amount on the same line -->
+        <div style="display: flex; align-items: center; margin-bottom: 16px;">
+            <mat-form-field style="flex: 1; margin-right: 8px;">
+                <mat-icon matPrefix>person</mat-icon>
+                <mat-select formControlName="name">
+                    @for (name of data.names; track name) {
+                      <mat-option [value]="name">{{name}}</mat-option>
+                    }
+                  </mat-select>
+            </mat-form-field>
+            <mat-form-field style="flex: 1;">
+                <mat-icon matPrefix>money</mat-icon>
+                <input matInput placeholder="Amount" formControlName="amount">
+            </mat-form-field>
+        </div>
+        <!-- Date on a new line -->
+        <div>
+            <mat-form-field style="width: 100%;">
+                <mat-label>Choose a date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="date">
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <button mat-raised-button type="submit">Submit</button>
+    </form>
+</div>
