@@ -1,0 +1,9 @@
+services:
+  backend:
+    build: ./Backend
+    ports:
+      - 9980:9980
+  frontend:
+    build: ./Frontend
+    ports:
+      - 4200:4200
