@@ -121,12 +121,14 @@ def run():
     stop_event = Event() 
     server = HTTPServer((HOST, PORT), testHttp)
 
-    def save_periodically(minutes:int = 30):
+    def save_periodically(minutes: int = 30):
         while not stop_event.is_set():
-            time.sleep(minutes*60)
-            print('Saving data...')
-            testHttp.handler.save_data('Saves/data.pkl')
-            print('Data saved.')
+            # Wait for either stop_event to be set or for the timeout
+            stop_event.wait(timeout=minutes*60)
+            if not stop_event.is_set():  # Only save if stop_event hasn't been set during the wait
+                print('Saving data...')
+                testHttp.handler.save_data('Saves/data.pkl')
+                print('Data saved.')
 
     save_thread = Thread(target=save_periodically, args=(10,))
     save_thread.start()
@@ -139,10 +141,10 @@ def run():
         print('Interupted by user, saving data')
         testHttp.handler.save_data('Saves/data.pkl')
         print('Closing server')
-        server.server_close()
     finally:
         stop_event.set()
         save_thread.join()
+        server.server_close()
 
 if __name__ == '__main__':
     run()
