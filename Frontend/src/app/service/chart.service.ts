@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ChartService {
 
-  url = 'https://house-progress-prod.bgall.dev'
+  url = 'https://house-prog.bgall.dev/api'
 
   constructor(private http: HttpClient) { }
 
