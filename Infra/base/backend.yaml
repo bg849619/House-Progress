@@ -19,6 +19,6 @@ spec:
   volumes:
   - name: storage
     persistentVolumeClaim:
-      claimName: storage
+      claimName: house-progress-storage
   imagePullSecrets:
   - name: gitea-puller
