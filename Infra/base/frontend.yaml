@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: house-progress
+      component: frontend
+  template:
+    metadata:
+      labels:
+        app: house-progress
+        component: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: gitea.k8s-b.home.bgall.dev/blake/house-progress-frontend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 4200
+              name: http
+  imagePullSecrets:
+    - name: gitea-puller

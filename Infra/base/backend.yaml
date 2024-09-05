@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend
+  labels:
+    app: house-progress
+    component: backend
+spec:
+  containers:
+  - name: backend
+    image: gitea.k8s-b.home.bgall.dev/blake/house-progress-backend:latest
+    imagePullPolicy: Always
+    ports:
+    - containerPort: 9980
+      name: http
+    volumeMounts:
+    - name: storage
+      mountPath: /app/Saves # I think.
+  imagePullSecrets:
+  - name: gitea-puller
