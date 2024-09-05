@@ -37,7 +37,7 @@ export class EditDialogComponent {
   constructor() {
     this.form = new FormGroup({
       name: new FormControl('', [Validators.required]),
-      amount: new FormControl('', [Validators.required, Validators.pattern(/^\$?\d+\.\d{2}\$?$/gm)]),
+      amount: new FormControl('', [Validators.required, Validators.min(-500)]),
       date: new FormControl(new Date(), [Validators.required])
     })
 
