@@ -16,5 +16,9 @@ spec:
     volumeMounts:
     - name: storage
       mountPath: /app/Saves # I think.
+  volumes:
+  - name: storage
+    persistentVolumeClaim:
+      claimName: storage
   imagePullSecrets:
   - name: gitea-puller
