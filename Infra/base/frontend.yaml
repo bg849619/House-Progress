@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: gitea.k8s-b.home.bgall.dev/blake/house-progress-frontend:v0.1.1
+          image: gitea.k8s-b.home.bgall.dev/blake/house-progress-frontend:v0.1.2
           imagePullPolicy: Always
           ports:
             - containerPort: 4200
