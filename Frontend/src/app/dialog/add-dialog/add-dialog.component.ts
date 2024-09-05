@@ -43,7 +43,7 @@ export class AddDialogComponent {
     this.form = new FormGroup({
       date: new FormControl(new Date(), Validators.required),
       name: new FormControl('', Validators.required),
-      amount: new FormControl('', [Validators.required, Validators.pattern(/^\$?\d+\.\d{2}\$?$/gm)])
+      amount: new FormControl('', [Validators.required, Validators.min(-500)])
     })
 
     this.filteredNames = this.form.controls['name'].valueChanges.pipe(
