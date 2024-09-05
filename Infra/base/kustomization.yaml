@@ -3,7 +3,6 @@ kind: Kustomization
 resources:
   - frontend.yaml
   - backend.yaml
-  - storage.yaml
   - frontend-service.yaml
   - backend-service.yaml
   - storage.yaml
